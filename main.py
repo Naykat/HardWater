@@ -37,6 +37,6 @@ def reveal(filename: str) -> str:
     return text
 
 if __name__ == "__main__":
-    watermark("Images/example.png","Naykat").save("HardWater.png")
+    watermark("Images/example.png","Naykat").save("Images/HardWater.png")
     print(reveal("HardWater.png"))
     
