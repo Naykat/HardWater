@@ -35,8 +35,4 @@ def reveal(filename: str) -> str:
         current_width, current_height = pixel%width, pixel//width
         text+=chr(image.getpixel((current_width,current_height))[2])
     return text
-
-if __name__ == "__main__":
-    watermark("Images/example.png","Naykat").save("Images/HardWater.png")
-    print(reveal("HardWater.png"))
     
