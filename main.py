@@ -16,6 +16,7 @@ def watermark(filename: str, text: str) -> Image:
         current_height = (index+4)//width
 
         input_symbol_into_pixel(image, current_width, current_height, letter)
+        
     return image
 
 def reveal(filename: str) -> str:
@@ -36,5 +37,6 @@ def reveal(filename: str) -> str:
     return text
 
 if __name__ == "__main__":
-    watermark("Images/example.png","Naykat")
+    watermark("Images/example.png","Naykat").save("HardWater.png")
+    print(reveal("HardWater.png"))
     
