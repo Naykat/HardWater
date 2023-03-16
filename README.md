@@ -1,4 +1,4 @@
-# Hardwater
+# HardWater
 **HardWater** can sign a picture with a hidden  custom watermark
 
 ## Functions
