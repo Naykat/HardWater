@@ -6,4 +6,5 @@
 2. **reveal** *— reveals HardWater's watermark. If it does not exist, returns None*
 
 ## QuickStart
-<img width="456" alt="quickstart" src="https://user-images.githubusercontent.com/65075625/225715642-e32a4aee-af22-4d76-8528-4602df95999c.png">
+<img width="449" alt="QuickStart" src="https://user-images.githubusercontent.com/65075625/225907484-4746479a-f8dc-4ffb-8572-b160c7554351.png">
+
