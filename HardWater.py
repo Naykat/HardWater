@@ -64,7 +64,3 @@ def reveal(filename: str or Image) -> str:
         return text.replace(chr(0),"")
     else:
         return None
-
-
-    
-    
