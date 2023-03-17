@@ -35,7 +35,3 @@ def get_stepx_and_stepy(x: int, y: int, step: int) -> list:
         stepx = int(x/y*step)
         stepy = step
     return stepx, stepy
-
-
-
-
