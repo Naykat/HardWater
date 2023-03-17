@@ -14,7 +14,8 @@ def watermark(filename: str, text: str) -> Image:
 
     image = Image.open(path(filename))
     width, height = image.size
-
+    mark(image)
+    
     while calculate_step(text, width, height)>255:
         text+=chr(0)
     step = calculate_step(text, width, height)
@@ -42,20 +43,28 @@ def reveal(filename: str or Image) -> str:
     #Exceptions
     if not(type(filename) is str):
         raise TypeError(f"""filename must be str, not {get_type(filename)}""")
+
     image = Image.open(path(filename))
-    width, height = image.size
+    if is_watermarked(image):
+        width, height = image.size
+    
+        step = get_step(image)
+        text_length = calculate_text_length(width, height, step)
 
-    step = get_step(image)
-    text_length = calculate_text_length(width, height, step)
+        text = ""
+        current_x = 0
+        current_y = 0
+        step_x, step_y = get_stepx_and_stepy(width, height, step)
 
-    text = ""
-    current_x = 0
-    current_y = 0
-    step_x, step_y = get_stepx_and_stepy(width, height, step)
+        for pixel in range(text_length):
+            text += chr(image.getpixel((current_x, current_y))[2])
+            current_x += step_x
+            current_y += step_y
 
-    for pixel in range(text_length):
-        text += chr(image.getpixel((current_x, current_y))[2])
-        current_x += step_x
-        current_y += step_y
+        return text.replace(chr(0),"")
+    else:
+        return None
 
-    return text.replace(chr(0),"")
+
+    
+    
