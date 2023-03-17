@@ -1,40 +1,61 @@
+#HardWater
 from PIL import Image
-from Utilities.utils import *
+from Utilities.MathFunctions import calculate_step, calculate_text_length, get_stepx_and_stepy
+from Utilities.Utils import *
+from os.path import abspath as path
 
 def watermark(filename: str, text: str) -> Image:
-    image = Image.open(filename)
-    width, height = image.size
-    last_pixel_width = (len(text)+5)%width
-    last_pixel_height = (len(text)+5)//width
-    encode_last_symbol_coordinates(image, last_pixel_width, last_pixel_height)
-    symbols = prepare_text(text)
-    
-    for index, letter in enumerate(symbols):
-        current_width = (index+5)%width
-        current_height = (index+5)//width
-        input_symbol_into_pixel(image, current_width, current_height, letter)
 
-    r,g = image.getpixel((0,0))[:2]
-    image.putpixel((0,0),(r,g,0))
+    #Exceptions
+    if not(type(filename) is str):
+        raise TypeError(f"""filename must be str, not {get_type(filename)}""")
+    if not(type(text) is str):
+        raise TypeError(f"""text must be str, not {get_type(filename)}""")
+
+    image = Image.open(path(filename))
+    width, height = image.size
+
+    while calculate_step(text, width, height)>255:
+        text+=chr(0)
+    step = calculate_step(text, width, height)
+    draw_step(image, step)
+
+    current_x = 0
+    current_y = 0
+    step_x, step_y = get_stepx_and_stepy(width, height, step)
+
+    for symbol in text:
+        if ord(symbol)>255:
+            raise ValueError(f"Unknown symbol: {symbol}")
+
+        r,g = image.getpixel((current_x, current_y))[:2]
+        image.putpixel((current_x, current_y),(r,g,ord(symbol)))
+
+        current_x += step_x
+        current_y += step_y
+
     return image
 
 
-def reveal(filename: str) -> str:
+def reveal(filename: str or Image) -> str:
+
+    #Exceptions
+    if not(type(filename) is str):
+        raise TypeError(f"""filename must be str, not {get_type(filename)}""")
+    image = Image.open(path(filename))
+    width, height = image.size
+
+    step = get_step(image)
+    text_length = calculate_text_length(width, height, step)
+
     text = ""
-    image = Image.open(filename)
-    width = image.size[0]
-    if image.getpixel((0,0))[2]==0:
-        last_pixel_width, last_pixel_height = decode_last_symbol_coordinates(image)
+    current_x = 0
+    current_y = 0
+    step_x, step_y = get_stepx_and_stepy(width, height, step)
 
-        if last_pixel_height==0:
-            text_length = last_pixel_width
-        else:
-            text_length = (last_pixel_height-1)*width+last_pixel_width
-            
-        for pixel in range(5,text_length):
-            current_width, current_height = pixel%width, pixel//width
-            text+=chr(image.getpixel((current_width,current_height))[2])
-        return text
+    for pixel in range(text_length):
+        text += chr(image.getpixel((current_x, current_y))[2])
+        current_x += step_x
+        current_y += step_y
 
-    else:
-        return None
+    return text.replace(chr(0),"")
