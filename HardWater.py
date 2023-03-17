@@ -38,7 +38,7 @@ def watermark(filename: str, text: str) -> Image:
     return image
 
 
-def reveal(filename: str or Image) -> str:
+def reveal(filename: str) -> str:
 
     #Exceptions
     if not(type(filename) is str):
